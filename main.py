@@ -24,8 +24,12 @@ Y_1 = 117
 
 #
 if __name__ == '__main__':
+    # Подготовим изображение датчика
+    utils.gauge_preparing()
+
+
     # Загружаем изображение
-    img = cv.imread('Voltmeter-blank.jpg')
+    img = cv.imread('Voltmeter-Blank.jpg')
 
     # Рисуем стрелку в положение слева
     # line_thickness = 3
