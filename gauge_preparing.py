@@ -1,9 +1,10 @@
 # Программа подготовки изображения прибора
-# Запускается один раз чтобы получить файл Voltmeter-pure.jpg
-# Использует файл Voltmeter2.jpg - изображение прибора без стрелки.
+# Используется файл Voltmeter2.jpg - изображение прибора без стрелки.
+# Необходимо запускать один раз, чтобы получить файл Voltmeter-blank.jpg
+
 import numpy as np
 import cv2 as cv
-import utils
+# import utils
 
 # Размер к которому приводить изображение
 IMG_SIZE = 512
@@ -39,4 +40,4 @@ cv.imshow('image', img)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
-cv.imwrite('Voltmeter-pure.jpg', img)
+cv.imwrite('Voltmeter-blank.jpg', img)
