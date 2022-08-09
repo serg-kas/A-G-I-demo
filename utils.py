@@ -5,7 +5,7 @@ import math
 
 # Размер к которому приводить изображение
 IMG_SIZE = 512
-# Положение стрелки подбирается по изображению прибора после ресайза
+# Положение стрелки указывается по изображению прибора после ресайза
 # центр (ось вращения) стрелки
 X_c = 252
 Y_c = 309
@@ -41,11 +41,11 @@ def autocontrast(img):
 
 
 # Функция подготовки изображения прибора
-# Использует файл Voltmeter-NoArrow.jpg
+# Использует файл Voltmeter-NoNeedle.jpg
 # Записывает файл Voltmeter-Blank.jpg
 def gauge_img_preparing():
     # Загружаем изображение
-    img = cv.imread('Voltmeter-NoArrow.jpg')
+    img = cv.imread('Voltmeter-NoNeedle.jpg')
 
     # Рассчитаем коэффициент для изменения размера
     height = img.shape[0]
