@@ -135,6 +135,8 @@ def get_random_measurement(img, L, angle_0, angle_1):
     # img = autocontrast(img)
 
     # Отрежем часть рисунка где шкала
-    img = img[:175, :]
+    img = img[:175, :
+
+    # TODO: уменьшить разрешение и/или перевести в ч/б палитру ?
 
     return r, img
