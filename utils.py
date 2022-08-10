@@ -1,4 +1,5 @@
 # Модуль функций
+import numpy as np
 import cv2 as cv
 import random
 import math
@@ -58,15 +59,8 @@ def gauge_img_preparing():
     new_width = int(width * scale_img)
     new_height = int(height * scale_img)
 
-    #
-    # kernel = np.ones((3, 3), np.uint8)
-    # img = cv.dilate(img, kernel, iterations=1)
-    # img = cv.erode(img, kernel, iterations=1)
-    #
-    # ret, img = cv.threshold(img, 180, 255, cv.THRESH_BINARY)
-
     # делаем автокоррекцию контраста
-    # img = utils.autocontrast(img)
+    # img = autocontrast(img)
 
     # делаем ресайз
     img = cv.resize(img, (new_width, new_height), interpolation=cv.INTER_AREA)
@@ -82,22 +76,22 @@ def gauge_needle_preparing(img):
     # line_thickness = 3
     # cv.line(img, (X_0, Y_0), (X_c, Y_c), (0, 255, 0), thickness=line_thickness)
     # Посчитаем длину стрелки в начале шкалы
-    L_0 = ((X_0 - X_c)**2 + (Y_0 - Y_c)**2) ** 0.5
-    print('Длина стрелки в начале шкалы: {}'.format(L_0))
+    L_0 = ((X_0 - X_c) ** 2 + (Y_0 - Y_c) ** 2) ** 0.5
+    # print('Длина стрелки в начале шкалы: {}'.format(L_0))
 
     # Стрелка в середине шкалы
     # line_thickness = 3
     # cv.line(img, (X_c, Y_c), (X_m, Y_m), (0, 255, 0), thickness=line_thickness)
     # Посчитаем длину стрелки
-    L_m = ((X_c - X_m)**2 + (Y_c - Y_m)**2) ** 0.5
-    print('Длина стрелки в середине шкалы: {}'.format(L_m))
+    L_m = ((X_c - X_m) ** 2 + (Y_c - Y_m) ** 2) ** 0.5
+    # print('Длина стрелки в середине шкалы: {}'.format(L_m))
 
     # Стрелка в конце шкалы (справа)
     # line_thickness = 3
     # cv.line(img, (X_1, Y_1), (X_c, Y_c), (0, 255, 0), thickness=line_thickness)
     # Посчитаем длину стрелки в конце шкалы
-    L_1 = ((X_1 - X_c)**2 + (Y_1 - Y_c)**2) ** 0.5
-    print('Длина стрелки в конце шкалы: {}'.format(L_1))
+    L_1 = ((X_1 - X_c) ** 2 + (Y_1 - Y_c) ** 2) ** 0.5
+    # print('Длина стрелки в конце шкалы: {}'.format(L_1))
 
     # Усредненная длина стрелки
     L = int((L_0 + L_m + L_1) / 3)
@@ -105,11 +99,11 @@ def gauge_needle_preparing(img):
 
     # Посчитаем угол наклона стрелки в начале шкалы
     # Угол отсчитываем с конца шкалы (против часовой стрелки)
-    angle_0 = math.pi - math.atan2(Y_c-Y_0, X_c-X_0)
-    print('Угол наклона в начале шкалы: {}'.format(angle_0))
+    angle_0 = math.pi - math.atan2(Y_c - Y_0, X_c - X_0)
+    print('Угол наклона в начале шкалы: {:.2f}'.format(angle_0))
     # Посчитаем угол наклона стрелки в конце шкалы
-    angle_1 = math.atan2(Y_c-Y_1, X_1-X_c)
-    print('Угол наклона в начале шкалы: {}'.format(angle_1))
+    angle_1 = math.atan2(Y_c - Y_1, X_1 - X_c)
+    print('Угол наклона в начале шкалы: {:.2f}'.format(angle_1))
 
     return L, angle_0, angle_1
 
@@ -122,7 +116,7 @@ def get_random_measurement(img, L, angle_0, angle_1):
 
     # пересчитываем случайное показание в случайный угол
     angle_r = angle_1 + r * (angle_0 - angle_1)
-    print('Получили случайный угол {}'.format(angle_r))
+    print('Получили случайный угол {:.2f}'.format(angle_r))
 
     # рисуем стрелку в случайном положении angle_r, длины L
     X_r = X_c + int(L * math.cos(angle_r))
@@ -130,5 +124,17 @@ def get_random_measurement(img, L, angle_0, angle_1):
     #
     line_thickness = 4
     cv.line(img, (X_r, Y_r), (X_c, Y_c), (0, 0, 0), thickness=line_thickness)
+
+    # убираем шум
+    kernel = np.ones((3, 3), np.uint8)
+    img = cv.dilate(img, kernel, iterations=1)
+    img = cv.erode(img, kernel, iterations=1)
+    # преобразуем по порогу
+    ret, img = cv.threshold(img, 180, 255, cv.THRESH_BINARY)
+    # делаем автокоррекцию контраста
+    # img = autocontrast(img)
+
+    # Отрежем часть рисунка где шкала
+    img = img[:175, :]
 
     return r, img
