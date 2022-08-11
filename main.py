@@ -15,7 +15,7 @@ if __name__ == '__main__':
     L, angle_0, angle_1 = u.gauge_needle_preparing(img)
 
     # Получаем случайное показание прибора
-    img, r, _, _ = u.get_random_measurement(img, L, angle_0, angle_1)
+    img, r = u.get_random_measurement(img, L, angle_0, angle_1)
     print('Случайное показание прибора: {}'.format(int(300 * (1 - r))))
 
     # TODO: Случайное показание прибора отправляем на предикт и визуализируем результат
