@@ -3,6 +3,7 @@
 Analog Gauge Inspection
 
 ![Вольтметер](https://github.com/serg-kas/A-G-I-demo/blob/master/Voltmeter-Original.jpg | width=100)
+<img src="Voltmeter-Original.jpg" alt="VVV" width="200"/>
 
 Задача распознавания показаний аналоговых стрелочных приборов делится на два этапа:
 1. найти прибор на картинке, очертить его bb или выделить сегментацией
