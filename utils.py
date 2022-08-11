@@ -139,9 +139,10 @@ def get_random_measurement(img, L, angle_0, angle_1):
     # Перейдем в ч/б и уменьшим размер
     # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     # Уменьшим размер
-    final_height = int(img.shape[0] / 2)
-    final_width = int(img.shape[1] / 2)
-    img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
+    # final_height = int(img.shape[0] / 2)
+    # final_width = int(img.shape[1] / 2)
+    # img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
+    img = cv.resize(img, (IMG_SIZE, IMG_SIZE), interpolation=cv.INTER_AREA)
     # print('Финальный размер картинки: {}'.format(img.shape))
 
     return img, r
