@@ -143,3 +143,32 @@ def get_random_measurement(img, L, angle_0, angle_1):
     # print('Финальный размер картинки: {}'.format(img.shape))
 
     return img, r
+
+
+# Функция получение картинки измерения по углу стрелки
+def get_angle_measurement(img, L, angle_r):
+    # рисуем стрелку в случайном положении angle_r, длины L
+    X_r = X_c + int(L * math.cos(angle_r))
+    Y_r = Y_c - int(L * math.sin(angle_r))
+    #
+    line_thickness = 4
+    cv.line(img, (X_r, Y_r), (X_c, Y_c), (0, 0, 0), thickness=line_thickness)
+
+    # убираем шум
+    kernel = np.ones((3, 3), np.uint8)
+    img = cv.dilate(img, kernel, iterations=1)
+    img = cv.erode(img, kernel, iterations=1)
+    # преобразуем по порогу
+    ret, img = cv.threshold(img, 180, 255, cv.THRESH_BINARY)
+    # делаем автокоррекцию контраста
+    # img = autocontrast(img)
+
+    # Отрежем часть рисунка где нет шкалы
+    img = img[:175, :]
+    # Уменьшим размер
+    # final_height = int(img.shape[0] / 2)
+    # final_width = int(img.shape[1] / 2)
+    # img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
+    # print('Финальный размер картинки: {}'.format(img.shape))
+
+    return img
