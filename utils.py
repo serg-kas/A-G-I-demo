@@ -142,6 +142,6 @@ def get_random_measurement(img, L, angle_0, angle_1):
     final_height = int(img.shape[0] / 2)
     final_width = int(img.shape[1] / 2)
     img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
-    print('Финальный размер картинки: {}'.format(img.shape))
+    # print('Финальный размер картинки: {}'.format(img.shape))
 
     return img, r, final_height, final_width
