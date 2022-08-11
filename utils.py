@@ -95,15 +95,15 @@ def gauge_needle_preparing(img):
 
     # Усредненная длина стрелки
     L = int((L_0 + L_m + L_1) / 3)
-    print('Усредненная длина стрелки: {}'.format(L))
+    # print('Усредненная длина стрелки: {}'.format(L))
 
     # Посчитаем угол наклона стрелки в начале шкалы
     # Угол отсчитываем с конца шкалы (против часовой стрелки)
     angle_0 = math.pi - math.atan2(Y_c - Y_0, X_c - X_0)
-    print('Угол наклона в начале шкалы: {:.2f}'.format(angle_0))
+    # print('Угол наклона в начале шкалы: {:.2f}'.format(angle_0))
     # Посчитаем угол наклона стрелки в конце шкалы
     angle_1 = math.atan2(Y_c - Y_1, X_1 - X_c)
-    print('Угол наклона в начале шкалы: {:.2f}'.format(angle_1))
+    # print('Угол наклона в начале шкалы: {:.2f}'.format(angle_1))
 
     return L, angle_0, angle_1
 
@@ -116,7 +116,7 @@ def get_random_measurement(img, L, angle_0, angle_1):
 
     # пересчитываем случайное показание в случайный угол
     angle_r = angle_1 + r * (angle_0 - angle_1)
-    print('Получили случайный угол {:.2f}'.format(angle_r))
+    # print('Получили случайный угол {:.2f}'.format(angle_r))
 
     # рисуем стрелку в случайном положении angle_r, длины L
     X_r = X_c + int(L * math.cos(angle_r))
@@ -135,8 +135,12 @@ def get_random_measurement(img, L, angle_0, angle_1):
     # img = autocontrast(img)
 
     # Отрежем часть рисунка где шкала
-    img = img[:175, :
-
-    # TODO: уменьшить разрешение и/или перевести в ч/б палитру ?
+    img = img[:175, :]
+    # Перейдем в ч/б и уменьшим размер
+    img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    final_width = int(img.shape[1] / 3)
+    final_height = int(img.shape[0] / 3)
+    img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
+    # print('Финальный размер картинки: {}'.format(img.shape))
 
     return r, img
