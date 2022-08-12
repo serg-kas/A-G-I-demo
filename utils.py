@@ -6,8 +6,8 @@ import math
 
 # Размер к которому приводить изображение
 IMG_SIZE = 512
-# Положение стрелки указывается по изображению прибора после ресайза
-# центр (ось вращения) стрелки
+# Положение стрелки указывается по изображению прибора после ресайза к IMG_SIZE
+# центр стрелки (ось вращения)
 X_c = 252
 Y_c = 309
 # начало шкалы
@@ -37,13 +37,12 @@ def autocontrast(img):
 
     # Converting image from LAB Color model to BGR color spcae
     result = cv.cvtColor(limg, cv.COLOR_LAB2BGR)
-
     return result
 
 
 # Функция подготовки изображения прибора
-# Использует файл Voltmeter-NoNeedle.jpg
-# Записывает файл Voltmeter-Blank.jpg
+# Использует файл Voltmeter-NoNeedle.jpg (оригинальное фото прибора с затертой стрелкой)
+# Записывает файл Voltmeter-Blank.jpg (значащая часть циферблата без стрелки)
 def gauge_img_preparing():
     # Загружаем изображение
     img = cv.imread('Voltmeter-NoNeedle.jpg')
@@ -75,21 +74,18 @@ def gauge_needle_preparing(img):
     # Стрелка в начале шкалы (слева)
     # line_thickness = 3
     # cv.line(img, (X_0, Y_0), (X_c, Y_c), (0, 255, 0), thickness=line_thickness)
-    # Посчитаем длину стрелки в начале шкалы
     L_0 = ((X_0 - X_c) ** 2 + (Y_0 - Y_c) ** 2) ** 0.5
     # print('Длина стрелки в начале шкалы: {}'.format(L_0))
 
     # Стрелка в середине шкалы
     # line_thickness = 3
     # cv.line(img, (X_c, Y_c), (X_m, Y_m), (0, 255, 0), thickness=line_thickness)
-    # Посчитаем длину стрелки
     L_m = ((X_c - X_m) ** 2 + (Y_c - Y_m) ** 2) ** 0.5
     # print('Длина стрелки в середине шкалы: {}'.format(L_m))
 
     # Стрелка в конце шкалы (справа)
     # line_thickness = 3
     # cv.line(img, (X_1, Y_1), (X_c, Y_c), (0, 255, 0), thickness=line_thickness)
-    # Посчитаем длину стрелки в конце шкалы
     L_1 = ((X_1 - X_c) ** 2 + (Y_1 - Y_c) ** 2) ** 0.5
     # print('Длина стрелки в конце шкалы: {}'.format(L_1))
 
@@ -97,14 +93,12 @@ def gauge_needle_preparing(img):
     L = int((L_0 + L_m + L_1) / 3)
     # print('Усредненная длина стрелки: {}'.format(L))
 
-    # Посчитаем угол наклона стрелки в начале шкалы
-    # Угол отсчитываем с конца шкалы (против часовой стрелки)
-    angle_0 = math.pi - math.atan2(Y_c - Y_0, X_c - X_0)
-    # print('Угол наклона в начале шкалы: {:.2f}'.format(angle_0))
+    # Угол отсчитываем по часовой стрелке от angle_0 до angle_1
+    angle_0 = math.atan2(Y_c - Y_0, X_c - X_0)
+    # print('Угол стрелки в начале шкалы: {:.2f}'.format(angle_0))
     # Посчитаем угол наклона стрелки в конце шкалы
-    angle_1 = math.atan2(Y_c - Y_1, X_1 - X_c)
-    # print('Угол наклона в начале шкалы: {:.2f}'.format(angle_1))
-
+    angle_1 = math.pi - math.atan2(Y_c - Y_1, X_1 - X_c)
+    # print('Угол стрелки в конце шкалы: {:.2f}'.format(angle_1))
     return L, angle_0, angle_1
 
 
@@ -112,14 +106,14 @@ def gauge_needle_preparing(img):
 def get_random_measurement(img, L, angle_0, angle_1):
     # берем случайное показание прибора в диапазоне от 0 до 1
     r = random.uniform(0, 1)
-    # print('Случайное показание прибора: {}'.format(int(300 * (1 - r))))
+    print('Случайное значение показания: {:.2f}'.format(r))
 
     # пересчитываем случайное показание в случайный угол
-    angle_r = angle_1 + r * (angle_0 - angle_1)
-    # print('Получили случайный угол {:.2f}'.format(angle_r))
+    angle_r = angle_0 + r * (angle_1 - angle_0)
+    print('Получили случайный угол {:.2f}'.format(angle_r))
 
     # рисуем стрелку в случайном положении angle_r, длины L
-    X_r = X_c + int(L * math.cos(angle_r))
+    X_r = X_c - int(L * math.cos(angle_r))
     Y_r = Y_c - int(L * math.sin(angle_r))
     #
     line_thickness = 4
@@ -136,19 +130,13 @@ def get_random_measurement(img, L, angle_0, angle_1):
 
     # Отрежем часть рисунка где нет шкалы
     img = img[:175, :]
-    # Уменьшим размер
-    # final_height = int(img.shape[0] / 2)
-    # final_width = int(img.shape[1] / 2)
-    # img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
-    # print('Финальный размер картинки: {}'.format(img.shape))
-
     return img, r
 
 
-# Функция получение картинки измерения по углу стрелки
+# Функция получение картинки измерения по углу и длине стрелки
 def get_angle_measurement(img, L, angle_r):
-    # рисуем стрелку в случайном положении angle_r, длины L
-    X_r = X_c + int(L * math.cos(angle_r))
+    # рисуем стрелку в заданном положении angle_r, длины L
+    X_r = X_c - int(L * math.cos(angle_r))
     Y_r = Y_c - int(L * math.sin(angle_r))
     #
     line_thickness = 4
@@ -165,10 +153,4 @@ def get_angle_measurement(img, L, angle_r):
 
     # Отрежем часть рисунка где нет шкалы
     img = img[:175, :]
-    # Уменьшим размер
-    # final_height = int(img.shape[0] / 2)
-    # final_width = int(img.shape[1] / 2)
-    # img = cv.resize(img, (final_width, final_height), interpolation=cv.INTER_AREA)
-    # print('Финальный размер картинки: {}'.format(img.shape))
-
     return img

@@ -16,10 +16,10 @@ if __name__ == '__main__':
 
     # Получаем случайное показание прибора
     img, r = u.get_random_measurement(img, L, angle_0, angle_1)
-    print('Случайное показание прибора: {}'.format(int(300 * (1 - r))))
+    print('Случайное показание прибора: {}'.format(int(300 * r)))
 
     # TODO: Случайное показание прибора отправляем на предикт и визуализируем результат
 
-    cv.imshow('V = ' + str(int(300 * (1 - r))), img)
+    cv.imshow('V = ' + str(int(300 * r)), img)
     cv.waitKey(0)
     cv.destroyAllWindows()
