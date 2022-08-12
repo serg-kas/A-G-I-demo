@@ -106,11 +106,11 @@ def gauge_needle_preparing(img):
 def get_random_measurement(img, L, angle_0, angle_1):
     # берем случайное показание прибора в диапазоне от 0 до 1
     r = random.uniform(0, 1)
-    print('Случайное значение показания: {:.2f}'.format(r))
+    # print('Случайное значение показания: {:.2f}'.format(r))
 
     # пересчитываем случайное показание в случайный угол
     angle_r = angle_0 + r * (angle_1 - angle_0)
-    print('Получили случайный угол {:.2f}'.format(angle_r))
+    # print('Получили случайный угол {:.2f}'.format(angle_r))
 
     # рисуем стрелку в случайном положении angle_r, длины L
     X_r = X_c - int(L * math.cos(angle_r))
