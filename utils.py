@@ -3,6 +3,11 @@ import numpy as np
 import cv2 as cv
 import random
 import math
+import os
+from tensorflow.keras.models import Model
+from tensorflow.keras.applications.vgg16 import VGG16
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # закомментировать для использования GPU
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'   # уровень 2 - только сообщения об ошибках
 
 # Размер к которому приводить изображение
 IMG_SIZE = 512
@@ -19,6 +24,13 @@ Y_m = 46
 # конец шкалы
 X_1 = 449
 Y_1 = 117
+
+
+# Функция получения модели
+def get_model():
+    base_model = VGG16(weights='imagenet')
+    model = Model(inputs=base_model.input, outputs=base_model.get_layer("fc2").output)
+    return model
 
 
 # Функция автокоррекции контраста
