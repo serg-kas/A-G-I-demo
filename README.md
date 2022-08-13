@@ -35,6 +35,6 @@ Analog Gauge Inspection
 
 main.py - демонстрация алгоритма.
 
-<img src="result.jpg" alt="VVV" width="200"/>
+<img src="result.jpg" alt="VVV" width="300"/>
 
 Model_VGG16_as_features_extractor.ipynb - ноутбук по задаче.
