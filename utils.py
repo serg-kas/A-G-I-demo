@@ -4,6 +4,7 @@ import cv2 as cv
 import random
 import math
 import os
+from sklearn.metrics.pairwise import cosine_similarity
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications.vgg16 import VGG16
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # закомментировать для использования GPU
@@ -24,13 +25,6 @@ Y_m = 46
 # конец шкалы
 X_1 = 449
 Y_1 = 117
-
-
-# Функция получения модели
-def get_model():
-    base_model = VGG16(weights='imagenet')
-    model = Model(inputs=base_model.input, outputs=base_model.get_layer("fc2").output)
-    return model
 
 
 # Функция автокоррекции контраста
@@ -166,3 +160,28 @@ def get_angle_measurement(img, L, angle_r):
     # Отрежем часть рисунка где нет шкалы
     img = img[:175, :]
     return img
+
+
+# Функция получения модели
+def get_model():
+    base_model = VGG16(weights='imagenet')
+    model = Model(inputs=base_model.input, outputs=base_model.get_layer("fc2").output)
+    return model
+
+
+# Функция предикта
+def get_pred(model, feats, angles, img, L, angle_0, angle_1):
+    # подготовим изображение для отправки в модель
+    img_to_pred = cv.resize(img.copy(), (224, 224), cv.INTER_LINEAR)
+    img_to_pred = img_to_pred / 255.
+    img_to_pred = np.expand_dims(img_to_pred, axis=0)
+    pred = model.predict(img_to_pred)
+    # определяем наиболее близкую картинку (ее индекс)
+    cosPred = cosine_similarity(pred, feats)
+    pred_idx = np.argmax(cosPred)
+    #
+    res_angle = angles[pred_idx]
+    res_img = get_angle_measurement(img.copy(), L, res_angle)
+    res_r = (res_angle - angle_0) / (angle_1 - angle_0)
+
+    return res_img, res_r
