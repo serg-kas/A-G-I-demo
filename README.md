@@ -27,11 +27,8 @@ Analog Gauge Inspection
 
 Точность при 60 картинках составила менее половины деления шкалы (4В при шкале 30 отсчетов и диапазоне 300В)
 
-<img src="Result.jpg" alt="VVV" width="200"/>
-
-
 main.py - демострация алгоритма на основе архитектуры VGG16 используемой в качестве экстрактора фич.
 
-utils.py - библиотека функций
+<img src="result.jpg" alt="VVV" width="200"/>
 
 Model_VGG16_as_features_extractor.ipynb - ноутбук по задаче.
