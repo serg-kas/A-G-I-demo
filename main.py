@@ -46,10 +46,10 @@ if __name__ == '__main__':
                cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
     # Увеличим картинку для записи в файл
-    out_height = curr_img.shape[0] * 2
-    out_width = curr_img.shape[1] * 2
-    out_img = cv.resize(curr_img, (out_width, out_height))
-    cv.imwrite('result.jpg', out_img)
+    # out_height = curr_img.shape[0] * 2
+    # out_width = curr_img.shape[1] * 2
+    # out_img = cv.resize(curr_img, (out_width, out_height))
+    cv.imwrite('result.jpg', curr_img)
 
     cv.imshow('Analog Gauge Inspection', curr_img)
     cv.waitKey(0)
