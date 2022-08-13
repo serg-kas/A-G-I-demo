@@ -29,8 +29,7 @@ if __name__ == '__main__':
     angle_r = angle_0 + curr_r * (angle_1 - angle_0)
 
     # получаем предикт
-    res_img, res_r = u.get_pred(feat_extractor, feat_np, angles, curr_img.copy(), L, angle_0, angle_1)
-
+    _, res_r = u.get_pred(feat_extractor, feat_np, angles, curr_img.copy(), L, angle_0, angle_1)
     # пересчитаем радианы в вольты
     curr_V = int(300 * curr_r)
     res_V = int(300 * res_r)
@@ -46,7 +45,12 @@ if __name__ == '__main__':
     cv.putText(curr_img, "pred=" + str(res_V), (5, 50),
                cv.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
-    cv.imwrite('result.jpg', curr_img)
-    cv.imshow('V = ' + str(curr_V), curr_img)
+    # Увеличим картинку для записи в файл
+    out_height = curr_img.shape[0] * 2
+    out_width = curr_img.shape[1] * 2
+    out_img = cv.resize(curr_img, (out_width, out_height))
+    cv.imwrite('result.jpg', out_img)
+
+    cv.imshow('Analog Gauge Inspection', curr_img)
     cv.waitKey(0)
     cv.destroyAllWindows()
