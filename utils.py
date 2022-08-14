@@ -4,11 +4,13 @@ import cv2 as cv
 import random
 import math
 import os
+import sys
 from sklearn.metrics.pairwise import cosine_similarity
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications.vgg16 import VGG16
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # закомментировать для использования GPU
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'   # уровень 2 - только сообщения об ошибках
+if 'google.colab' not in sys.modules:
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # закомментировать для использования GPU
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'   # уровень 2 - только сообщения об ошибках
 
 # Размер к которому приводить изображение
 IMG_SIZE = 512
